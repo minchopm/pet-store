@@ -1,12 +1,11 @@
 import React from 'react';
-import Cards from "../cards-list";
+import Card from "../card";
 import { Provider } from '../context';
 
 const AppTemplate = (props) => {
-
   return (
     <Provider context={props}>
-      <Cards />
+      <Card />
     </Provider>
   );
 }
