@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { preloadImage } from '../utils/preloader';
 import AppTemplate from "./app-template";
-import { createWorkerFactory, useWorker } from '@shopify/react-web-worker';
-
-const createWorker = createWorkerFactory(() => import('../utils/preloader'));
 
 const App = () => {
-  const worker = useWorker(createWorker);
 
-  const [pets, setPets] = useState({})
+  const [pets, setPets] = useState(null)
   const [users, setUsers] = useState({})
 
   useEffect(() => {
@@ -18,17 +15,21 @@ const App = () => {
       const result = await response.json()
 
       for (let i = 0; i < result.length; i++) {
-        let webWorkerMessage;
-        if (i < 2) {
-          webWorkerMessage = await worker.preloadImage(i)
-        } else {
-          webWorkerMessage = worker.preloadImage(i)
+        const src = `https://source.unsplash.com/random/?Animal/?img=${i}`
+
+        if (i === 0) {
+          await preloadImage(src)
         }
-        result[i].photoUrls = [webWorkerMessage]
+
+        result[i].photoUrls = [src]
       };
       setPets(result)
     })()
-  }, [worker]);
+  }, []);
+
+  if (!pets) {
+    return null;
+  }
   return (
     <AppTemplate pets={pets} users={users} />
   );

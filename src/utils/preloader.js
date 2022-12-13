@@ -1,15 +1,14 @@
-export async function preloadImage(i) {
-  const src = `https://source.unsplash.com/random/?Animal/?img=${i}`
+export async function preloadImage(src) {
 
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.src = src
 
     img.onload = () => {
-      resolve(src)
+      resolve()
     }
     img.onerror = () => {
-      reject(null)
+      reject()
     }
   })
 }
